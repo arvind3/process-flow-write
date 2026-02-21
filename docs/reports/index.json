@@ -1,6 +1,13 @@
 {
   "reports": [
     {
+      "timestamp": "20260221-233945",
+      "targetUrl": "https://arvind3.github.io/ai-explorer/docs/index.html",
+      "generatedAt": "2026-02-21T23:39:50.930Z",
+      "summaryPath": "./reports/20260221-233945/summary.md",
+      "flowPath": "./reports/20260221-233945/flow.html"
+    },
+    {
       "timestamp": "20260221-120000",
       "targetUrl": "https://example.com",
       "generatedAt": "2026-02-21T12:00:00.000Z",
