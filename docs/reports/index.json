@@ -1,0 +1,11 @@
+{
+  "reports": [
+    {
+      "timestamp": "20260221-120000",
+      "targetUrl": "https://example.com",
+      "generatedAt": "2026-02-21T12:00:00.000Z",
+      "summaryPath": "./reports/20260221-120000/summary.md",
+      "flowPath": "./reports/20260221-120000/flow.html"
+    }
+  ]
+}

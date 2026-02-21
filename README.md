@@ -85,6 +85,20 @@ npx tsx scripts/render_mermaid.ts
 npx tsx scripts/publish_reports.ts
 ```
 
+4. Or run the local orchestrator
+
+```bash
+$env:TARGET_URL="https://example.com"
+npm run analyze:local
+```
+
+## Quality gates
+
+```bash
+npm run lint
+npm test
+```
+
 ## Trigger from the UI
 
 1. Open the GitHub Pages site.
@@ -98,3 +112,7 @@ npx tsx scripts/publish_reports.ts
 - `/scripts` Node scripts for discovery and reporting
 - `/docs` GitHub Pages output
 - `/.github/workflows/analyze.yml` GitHub Actions workflow
+
+## Sample report
+
+`docs/reports/20260221-120000` contains a demo report generated from `https://example.com`.

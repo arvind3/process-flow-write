@@ -8,6 +8,18 @@ if (!reportDir) {
   process.exit(1);
 }
 
+type ReportEntry = {
+  timestamp: string;
+  targetUrl: string;
+  generatedAt: string;
+  summaryPath: string;
+  flowPath: string;
+};
+
+type ReportsIndex = {
+  reports: ReportEntry[];
+};
+
 const docsReportsDir = path.join("docs", "reports");
 ensureDir(docsReportsDir);
 
@@ -33,13 +45,20 @@ function copyDir(source: string, destination: string) {
   }
 }
 
+if (fs.existsSync(destDir)) {
+  fs.rmSync(destDir, { recursive: true, force: true });
+}
+if (fs.existsSync(latestDir)) {
+  fs.rmSync(latestDir, { recursive: true, force: true });
+}
+
 copyDir(reportDir, destDir);
 copyDir(reportDir, latestDir);
 
 const meta = readJson(path.join(reportDir, "meta.json"), { targetUrl: "", startedAt: new Date().toISOString() });
 
 const indexPath = path.join(docsReportsDir, "index.json");
-const indexData = readJson(indexPath, { reports: [] as any[] });
+const indexData = readJson<ReportsIndex>(indexPath, { reports: [] });
 
 const entry = {
   timestamp,
@@ -49,7 +68,31 @@ const entry = {
   flowPath: `./reports/${timestamp}/flow.html`
 };
 
-const filtered = (indexData.reports ?? []).filter((item: any) => item.timestamp !== timestamp);
+const filtered = (indexData.reports ?? []).filter((item) => item.timestamp !== timestamp);
 indexData.reports = [entry, ...filtered].slice(0, 50);
 
 writeJson(indexPath, indexData);
+
+const latestIndex = `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Latest Report</title>
+    <style>
+      body { font-family: "Spline Sans", Arial, sans-serif; padding: 24px; background: #f4f1ec; }
+      a { color: #0a8f7b; font-weight: 600; text-decoration: none; }
+      .card { background: #fff; padding: 20px; border-radius: 16px; border: 1px solid #e0d7cc; }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <h1>Latest Process Flow</h1>
+      <p>Generated for ${meta.targetUrl ?? "unknown target"}.</p>
+      <p><a href="./flow.html">View flow diagram</a></p>
+      <p><a href="./summary.md">Read summary</a></p>
+    </div>
+  </body>
+</html>`;
+
+fs.writeFileSync(path.join(latestDir, "index.html"), latestIndex);

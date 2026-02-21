@@ -1,0 +1,70 @@
+{
+  "targetUrl": "https://example.com",
+  "generatedAt": "2026-02-21T12:00:10.000Z",
+  "count": 3,
+  "pages": [
+    {
+      "url": "https://example.com/",
+      "title": "Example Domain",
+      "headings": { "h1": ["Example Domain"], "h2": [] },
+      "navItems": [
+        { "text": "Login", "href": "/login" },
+        { "text": "Cart", "href": "/cart" }
+      ],
+      "buttons": [],
+      "ctaButtons": [],
+      "forms": [],
+      "links": ["https://example.com/login", "https://example.com/cart"],
+      "landmarks": { "header": true, "main": true, "footer": true },
+      "hasPasswordInput": false,
+      "hasSearchInput": false,
+      "missingTitle": false,
+      "h1Count": 1,
+      "imagesMissingAlt": 0,
+      "buttonsMissingLabel": 0,
+      "finalUrl": "https://example.com/",
+      "loginDetected": false,
+      "screenshot": "screenshots/example-domain.png"
+    },
+    {
+      "url": "https://example.com/login",
+      "title": "Login",
+      "headings": { "h1": ["Login"], "h2": [] },
+      "navItems": [],
+      "buttons": [{ "text": "Sign in", "selector": "button" }],
+      "ctaButtons": [{ "text": "Sign in", "selector": "button" }],
+      "forms": [{ "fields": [{ "name": "email", "type": "text", "placeholder": "Email" }] }],
+      "links": ["https://example.com/"],
+      "landmarks": { "header": true, "main": true, "footer": false },
+      "hasPasswordInput": true,
+      "hasSearchInput": false,
+      "missingTitle": false,
+      "h1Count": 1,
+      "imagesMissingAlt": 0,
+      "buttonsMissingLabel": 0,
+      "finalUrl": "https://example.com/login",
+      "loginDetected": true,
+      "screenshot": "screenshots/login.png"
+    },
+    {
+      "url": "https://example.com/cart",
+      "title": "Cart",
+      "headings": { "h1": ["Cart"], "h2": [] },
+      "navItems": [],
+      "buttons": [{ "text": "Checkout", "selector": "button" }],
+      "ctaButtons": [{ "text": "Checkout", "selector": "button" }],
+      "forms": [],
+      "links": ["https://example.com/checkout"],
+      "landmarks": { "header": true, "main": true, "footer": true },
+      "hasPasswordInput": false,
+      "hasSearchInput": false,
+      "missingTitle": false,
+      "h1Count": 1,
+      "imagesMissingAlt": 0,
+      "buttonsMissingLabel": 0,
+      "finalUrl": "https://example.com/cart",
+      "loginDetected": false,
+      "screenshot": "screenshots/cart.png"
+    }
+  ]
+}

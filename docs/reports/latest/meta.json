@@ -1,0 +1,10 @@
+{
+  "targetUrl": "https://example.com",
+  "reportDir": "reports/20260221-120000",
+  "startedAt": "2026-02-21T12:00:00.000Z",
+  "options": {
+    "maxDepth": 2,
+    "respectRobots": true,
+    "authenticated": false
+  }
+}

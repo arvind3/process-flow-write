@@ -1,5 +1,7 @@
 node_modules
 reports
+!docs/reports
+!docs/reports/**
 app/node_modules
 app/dist
 app/tsconfig.tsbuildinfo

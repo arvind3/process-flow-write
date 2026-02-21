@@ -3,7 +3,13 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build:app": "npm --prefix app install && npm --prefix app run build",
+    "dev": "npm --prefix app run dev",
+    "build": "npm --prefix app install && npm --prefix app run build",
+    "preview": "npm --prefix app run preview",
+    "lint": "eslint . --ext .ts,.tsx",
+    "format": "prettier --write .",
+    "test": "vitest run",
+    "analyze:local": "tsx scripts/analyze_local.ts",
     "run:discovery": "tsx scripts/run_discovery.ts",
     "run:playwright": "tsx scripts/run_playwright.ts",
     "build:flow": "tsx scripts/build_flow.ts",
@@ -14,8 +20,16 @@
     "playwright": "^1.49.0"
   },
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^7.18.0",
+    "@typescript-eslint/parser": "^7.18.0",
     "@types/node": "^22.9.0",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-react": "^7.35.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "prettier": "^3.3.3",
     "tsx": "^4.7.0",
-    "typescript": "^5.5.4"
+    "typescript": "^5.5.4",
+    "vitest": "^2.0.5"
   }
 }

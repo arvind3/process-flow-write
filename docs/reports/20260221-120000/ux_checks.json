@@ -1,0 +1,12 @@
+{
+  "targetUrl": "https://example.com",
+  "generatedAt": "2026-02-21T12:00:12.000Z",
+  "counts": {
+    "missingTitlePages": 0,
+    "multipleH1Pages": 0,
+    "imagesMissingAlt": 0,
+    "buttonsMissingLabel": 0,
+    "brokenLinks": 0
+  },
+  "brokenLinks": []
+}
