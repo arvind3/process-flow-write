@@ -65,6 +65,21 @@ async function getAuthCookies() {
   }
 }
 
+function writeFallbackUrls(reason: string) {
+  writeJson(path.join(reportDir, "urls.json"), {
+    targetUrl,
+    generatedAt: new Date().toISOString(),
+    counts: {
+      total: 1,
+      sameOrigin: 1
+    },
+    urls: [{ url: targetUrl, source: "fallback" }],
+    forms: [],
+    links: [],
+    error: reason
+  });
+}
+
 async function main() {
   let cookieHeader = "";
   if (authenticated) {
@@ -74,10 +89,19 @@ async function main() {
     }
   }
 
+  try {
+    execSync("docker info", { stdio: "ignore" });
+  } catch {
+    console.warn("Docker is not available. Writing fallback URLs only.");
+    writeFallbackUrls("docker_unavailable");
+    return;
+  }
+
   const zapPort = process.env.ZAP_PORT ?? "8090";
   const containerName = `zap-${Date.now()}`;
   const workspace = process.cwd().replace(/\\/g, "/");
   const volume = `${workspace}:/zap/wrk/:rw`;
+  let containerStarted = false;
 
   const zapArgs = [
     "docker run -d",
@@ -92,13 +116,14 @@ async function main() {
     `-config spider.maxDepth=${maxDepth}`
   ];
 
-  execSync(zapArgs.join(" "), { stdio: "inherit" });
-
-  const zapBase = `http://localhost:${zapPort}`;
-
   try {
+    execSync(zapArgs.join(" "), { stdio: "inherit" });
+    containerStarted = true;
+
+    const zapBase = `http://localhost:${zapPort}`;
+
     let ready = false;
-    for (let attempt = 0; attempt < 30; attempt += 1) {
+    for (let attempt = 0; attempt < 90; attempt += 1) {
       try {
         const response = await fetch(`${zapBase}/JSON/core/view/version/`);
         if (response.ok) {
@@ -166,12 +191,21 @@ async function main() {
       forms: [],
       links: []
     });
+  } catch (error) {
+    console.error("Discovery failed:", error instanceof Error ? error.message : error);
+    writeFallbackUrls("zap_failed");
   } finally {
-    execSync(`docker rm -f ${containerName}`, { stdio: "inherit" });
+    if (containerStarted) {
+      try {
+        execSync(`docker rm -f ${containerName}`, { stdio: "inherit" });
+      } catch {
+        // ignore cleanup errors
+      }
+    }
   }
 }
 
 main().catch((error) => {
   console.error("Discovery failed:", error instanceof Error ? error.message : error);
-  process.exit(1);
+  writeFallbackUrls("unexpected_error");
 });

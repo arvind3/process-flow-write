@@ -47,7 +47,14 @@ jobs:
       - name: Set report directory
         run: echo "REPORT_DIR=reports/$(date +%Y%m%d-%H%M%S)" >> $GITHUB_ENV
 
+      - name: Docker diagnostics
+        continue-on-error: true
+        run: |
+          docker --version
+          docker info
+
       - name: Run discovery (ZAP)
+        continue-on-error: true
         env:
           TARGET_URL: ${{ inputs.target_url }}
           CRAWL_DEPTH: ${{ inputs.crawl_depth }}
