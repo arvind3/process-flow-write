@@ -1,0 +1,21 @@
+{
+  "name": "process-flow-writer",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build:app": "npm --prefix app install && npm --prefix app run build",
+    "run:discovery": "tsx scripts/run_discovery.ts",
+    "run:playwright": "tsx scripts/run_playwright.ts",
+    "build:flow": "tsx scripts/build_flow.ts",
+    "render:mermaid": "tsx scripts/render_mermaid.ts",
+    "publish:reports": "tsx scripts/publish_reports.ts"
+  },
+  "dependencies": {
+    "playwright": "^1.49.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.9.0",
+    "tsx": "^4.7.0",
+    "typescript": "^5.5.4"
+  }
+}

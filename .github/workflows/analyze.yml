@@ -1,0 +1,86 @@
+name: Analyze Website
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_url:
+        description: "Target website URL"
+        required: true
+      max_pages:
+        description: "Max pages to visit with Playwright"
+        default: "50"
+        required: false
+      crawl_depth:
+        description: "ZAP crawl depth"
+        default: "3"
+        required: false
+      respect_robots:
+        description: "Respect robots.txt"
+        default: "true"
+        required: false
+      authenticated:
+        description: "Use authenticated crawl (requires secrets)"
+        default: "false"
+        required: false
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      actions: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Set report directory
+        run: echo "REPORT_DIR=reports/$(date +%Y%m%d-%H%M%S)" >> $GITHUB_ENV
+
+      - name: Run discovery (ZAP)
+        env:
+          TARGET_URL: ${{ inputs.target_url }}
+          CRAWL_DEPTH: ${{ inputs.crawl_depth }}
+          RESPECT_ROBOTS: ${{ inputs.respect_robots }}
+          AUTHENTICATED: ${{ inputs.authenticated }}
+          ZAP_USER: ${{ secrets.ZAP_USER }}
+          ZAP_PASS: ${{ secrets.ZAP_PASS }}
+          LOGIN_URL: ${{ secrets.LOGIN_URL }}
+          USER_FIELD: ${{ secrets.USER_FIELD }}
+          PASS_FIELD: ${{ secrets.PASS_FIELD }}
+          SUBMIT_SELECTOR: ${{ secrets.SUBMIT_SELECTOR }}
+          LOGGED_IN_URL_PATTERN: ${{ secrets.LOGGED_IN_URL_PATTERN }}
+        run: npx tsx scripts/run_discovery.ts
+
+      - name: Run Playwright extraction
+        env:
+          TARGET_URL: ${{ inputs.target_url }}
+          MAX_PAGES: ${{ inputs.max_pages }}
+        run: npx tsx scripts/run_playwright.ts
+
+      - name: Build flow
+        run: npx tsx scripts/build_flow.ts
+
+      - name: Render Mermaid
+        run: npx tsx scripts/render_mermaid.ts
+
+      - name: Publish reports
+        run: npx tsx scripts/publish_reports.ts
+
+      - name: Commit reports
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/reports
+          git commit -m "Publish report $REPORT_DIR" || echo "No changes to commit"
+          git push
